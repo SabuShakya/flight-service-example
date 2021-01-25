@@ -4,6 +4,7 @@ import com.sabu.flightserviceexample.dto.FlightBookingAcknowledgement;
 import com.sabu.flightserviceexample.dto.FlightBookingRequest;
 import com.sabu.flightserviceexample.entity.PassengerInfo;
 import com.sabu.flightserviceexample.entity.PaymentInfo;
+import com.sabu.flightserviceexample.exception.InsufficientAmountException;
 import com.sabu.flightserviceexample.repository.PassengerInfoRepository;
 import com.sabu.flightserviceexample.repository.PaymentInfoRepository;
 import com.sabu.flightserviceexample.utils.PaymentUtils;
@@ -26,7 +27,8 @@ public class FlightBookingService {
         this.paymentInfoRepository = paymentInfoRepository;
     }
 
-    @Transactional
+    @Transactional(rollbackOn = InsufficientAmountException.class)
+    // rollbackOn indicates rollback txn if checked exception InsufficientAmountException.class occurs
     public FlightBookingAcknowledgement bookFlightTicket(
             FlightBookingRequest flightBookingRequest
     ) {
